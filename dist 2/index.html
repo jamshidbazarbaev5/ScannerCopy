@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/easy-bonus-512x512.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="EasyBonus - Scan and earn rewards" />
+    <meta name="theme-color" content="#ffffff" />
+    <base href="/" />
+    <title>EasyBonus</title>
+    <script>
+      (function() {
+        var redirect = sessionStorage.redirect;
+        delete sessionStorage.redirect;
+        if (redirect && redirect !== location.href) {
+          history.replaceState(null, null, redirect);
+        }
+      })();
+    </script>
+    <script type="module" crossorigin src="/assets/index-BWhLxtJZ.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-CiyrUgI8.css">
+  </head>
+  <body>
+    <div id="root"></div>
+
+  </body>
+</html>
