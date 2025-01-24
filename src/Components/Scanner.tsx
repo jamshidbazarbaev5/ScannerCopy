@@ -190,15 +190,6 @@ export function Scanner() {
             return;
         }
 
-        if (scannedCodes.includes(scannedText)) {
-            setMessage(t('alreadyScannedToday'));
-            setShowErrorModal(true);
-            setTimeout(() => {
-                setShowErrorModal(false);
-            }, 3000);
-            return;
-        }
-
         setResult(scannedText);
         handleScan(scannedText);
     };
@@ -218,14 +209,14 @@ export function Scanner() {
                     target: scannerContainer as HTMLElement,
                     constraints: {
                         facingMode: 'environment',
-                        width: { min: 640 },
-                        height: { min: 480 },
+                        width: { min: 1280 },  // Increased resolution
+                        height: { min: 720 },  // Increased resolution
                         aspectRatio: { min: 1, max: 2 }
                     }
                 },
                 numOfWorkers: navigator.hardwareConcurrency,
                 locate: true,
-                frequency: 1,
+                frequency: 10,  // Increased frequency for faster scanning
                 debug: {
                     drawBoundingBox: true,
                     showFrequency: true,
@@ -234,8 +225,8 @@ export function Scanner() {
                 },
                 multiple: false,
                 locator: {
-                    halfSample: false,
-                    patchSize: 'large',
+                    halfSample: true,  // Changed to true for better performance
+                    patchSize: 'medium',  // Changed to medium for better small barcode detection
                     debug: {
                         showCanvas: false,
                         showPatches: false,
@@ -252,7 +243,13 @@ export function Scanner() {
                     }
                 },
                 decoder: {
-                    readers: ['ean_reader', 'ean_8_reader', 'code_128_reader', 'code_39_reader', 'upc_reader']
+                    readers: ['ean_reader', 'ean_8_reader', 'code_128_reader', 'code_39_reader', 'upc_reader'],
+                    debug: {
+                        drawBoundingBox: true,
+                        showFrequency: true,
+                        drawScanline: true,
+                        showPattern: true
+                    }
                 }
             },
             (err: any) => {
@@ -353,22 +350,34 @@ export function Scanner() {
         // Add global styles for Quagga video
         const style = document.createElement('style');
         style.textContent = `
+            #scanner-container {
+                position: relative;
+                width: 100%;
+                height: 300px;
+                overflow: hidden;
+            }
             #scanner-container > video {
                 width: 100%;
                 height: 100%;
                 object-fit: cover;
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
             }
             #scanner-container > canvas {
                 position: absolute;
-                top: 0;
-                left: 0;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
                 width: 100%;
                 height: 100%;
             }
             .drawingBuffer {
                 position: absolute;
-                top: 0;
-                left: 0;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
                 width: 100%;
                 height: 100%;
             }
@@ -532,8 +541,7 @@ export function Scanner() {
                 <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
                     <div className="bg-white dark:bg-gray-800 rounded-lg p-6 max-w-sm w-full">
                         <div className="flex items-center justify-center mb-4">
-                            <div
-                                className="w-12 h-12 rounded-full bg-red-100 dark:bg-red-900 flex items-center justify-center">
+                            <div className="w-12 h-12 rounded-full bg-red-100 dark:bg-red-900 flex items-center justify-center">
                                 <X className="w-6 h-6 text-red-600 dark:text-red-400"/>
                             </div>
                         </div>
@@ -541,7 +549,7 @@ export function Scanner() {
                             {t('error')}
                         </h3>
                         <p className="text-center mb-4 text-gray-700 dark:text-gray-300">
-                            {t('scanError')}
+                            {message || t('scanError')}
                         </p>
                         <button
                             onClick={() => setShowErrorModal(false)}

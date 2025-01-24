@@ -40,6 +40,12 @@ declare module 'quagga' {
         };
         decoder?: {
             readers: string[];
+            debug?: {
+                drawBoundingBox?: boolean;
+                showFrequency?: boolean;
+                drawScanline?: boolean;
+                showPattern?: boolean;
+            };
         };
     }
 
