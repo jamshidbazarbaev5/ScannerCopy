@@ -19,7 +19,6 @@ export function Scanner() {
     const [isScanning, setIsScanning] = useState(false);
     const [result, setResult] = useState("");
     const [showSuccessScreen, setShowSuccessScreen] = useState(false);
-    const [scannedCodes, setScannedCodes] = useState<string[]>([]);
     const [showErrorModal, setShowErrorModal] = useState(false);
     const isProcessing = useRef(false);
     const [message, setMessage] = useState("");
@@ -48,10 +47,6 @@ export function Scanner() {
 
     useEffect(() => {
         if (bonusHistory.data?.pages[0]) {
-            const todaysCodes = bonusHistory.data.pages[0].results.map(
-                (item) => item.barcode_data
-            );
-            setScannedCodes(todaysCodes);
             setTodayCount(bonusHistory.data.pages[0].count);
         }
         if (totalBonusHistory.data?.pages[0]) {
